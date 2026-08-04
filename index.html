@@ -3,544 +3,361 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Acris Furniture — Items for Sale</title>
+<title>Acris Furniture — What Are We Buying?</title>
 <style>
-  :root {
-    --bg:#faf9f7; --card:#fff; --ink:#1c1b19; --muted:#6f6b66;
-    --line:#e6e2dc; --well:#f1eee9; --free:#2f7d5d; --free-bg:#e7f4ee;
-    --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 20px rgba(0,0,0,.045);
+  :root{
+    --bg:#faf9f7; --card:#fff; --ink:#1c1b19; --muted:#6f6b66; --line:#e6e2dc; --well:#f1eee9;
+    --yes:#2f7d5d; --yes-bg:#e7f4ee; --no:#b04836; --no-bg:#fbeae6;
+    --accent:#1c1b19; --shadow:0 1px 2px rgba(0,0,0,.05),0 6px 20px rgba(0,0,0,.045);
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg:#161514; --card:#211f1d; --ink:#f2efeb; --muted:#a29c94;
-      --line:#332f2c; --well:#1a1917; --free:#7fd4ab; --free-bg:#1b3a2c;
-      --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#161514; --card:#211f1d; --ink:#f2efeb; --muted:#a29c94; --line:#332f2c; --well:#1a1917;
+      --yes:#7fd4ab; --yes-bg:#1b3a2c; --no:#f0907a; --no-bg:#3a201b;
+      --accent:#f2efeb; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.3);
     }
   }
-  * { box-sizing:border-box; }
-  body {
-    margin:0; background:var(--bg); color:var(--ink);
-    font:16px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap { max-width:860px; margin:0 auto; padding:48px 20px 80px; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:16px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:40px 20px 90px}
+  h1{font-size:clamp(26px,5vw,38px);letter-spacing:-.02em;margin:0 0 6px}
+  .lede{color:var(--muted);margin:0 0 20px}
 
-  header { margin-bottom:8px; }
-  h1 { font-size:clamp(28px,5vw,40px); letter-spacing:-.02em; margin:0 0 6px; }
-  .lede { color:var(--muted); margin:0 0 24px; }
-  .totals { display:flex; flex-wrap:wrap; gap:10px; }
-  .stat {
-    background:var(--card); border:1px solid var(--line); border-radius:12px;
-    padding:12px 16px; box-shadow:var(--shadow);
-  }
-  .stat b { display:block; font-size:20px; letter-spacing:-.01em; }
-  .stat span { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; }
+  /* tabs */
+  .tabs{position:sticky;top:0;z-index:30;background:var(--bg);
+        padding:10px 0 12px;margin:0 0 6px;border-bottom:1px solid var(--line);
+        display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);
+       padding:9px 15px;border-radius:99px;font:inherit;font-size:14px;font-weight:600;
+       cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px}
+  .tab[aria-selected="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+  .tab .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);opacity:.5}
+  .tab .dot.done{background:var(--yes);opacity:1}
+  .tab[aria-selected="true"] .dot.done{background:var(--bg)}
 
-  .room { margin-top:40px; }
-  h2 {
-    font-size:12px; text-transform:uppercase; letter-spacing:.11em; color:var(--muted);
-    font-weight:600; margin:0 0 14px; padding-bottom:10px; border-bottom:1px solid var(--line);
-    display:flex; justify-content:space-between; align-items:baseline; gap:12px;
-  }
-  .room-sub { letter-spacing:.02em; text-transform:none; font-weight:400; white-space:nowrap; }
+  .banner{background:var(--yes-bg);color:var(--yes);border:1px solid transparent;
+          padding:11px 14px;border-radius:11px;font-size:14px;font-weight:600;margin:14px 0 0}
+  .whoami{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+          background:var(--card);border:1px solid var(--line);border-radius:13px;
+          padding:14px 16px;margin:16px 0 4px;box-shadow:var(--shadow)}
+  .whoami p{margin:0;font-size:14px;color:var(--muted)}
+  .whoami b{color:var(--ink)}
+  .btn{border:1px solid var(--accent);background:var(--accent);color:var(--bg);
+       padding:10px 16px;border-radius:99px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn:active{transform:translateY(1px)}
 
-  .items { list-style:none; margin:0; padding:0; display:grid; gap:12px; }
-  .item {
-    display:flex; align-items:stretch; gap:0; min-height:216px;
-    background:var(--card); border:1px solid var(--line); border-radius:14px;
-    overflow:hidden; box-shadow:var(--shadow);
-  }
-  /* Image is absolutely positioned so it never drives row height: every row
-     is a uniform 216px regardless of whether the photo is portrait or landscape. */
-  .shot {
-    flex:0 0 172px; position:relative; align-self:stretch;
-    margin:0; padding:0; border:0; border-right:1px solid var(--line);
-    background:var(--well); cursor:zoom-in; display:block;
-  }
-  .shot img {
-    position:absolute; inset:0; width:100%; height:100%;
-    object-fit:contain;           /* never crop — the whole item stays visible */
-    display:block;
-  }
-  .meta { flex:1; padding:18px 22px; display:flex; flex-direction:column; justify-content:center; gap:3px; }
-  .ref { font-size:11px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
-  h3 { margin:0; font-size:17px; font-weight:600; letter-spacing:-.01em; line-height:1.35; }
-  .price { margin:6px 0 0; font-size:22px; font-weight:650; letter-spacing:-.015em; }
-  .price.free {
-    font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
-    color:var(--free); background:var(--free-bg); align-self:flex-start;
-    padding:4px 10px; border-radius:99px;
+  .room{margin-top:32px}
+  h2{font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:600;
+     margin:0 0 12px;padding-bottom:9px;border-bottom:1px solid var(--line);
+     display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .room-sub{letter-spacing:.02em;text-transform:none;font-weight:400;white-space:nowrap}
+  .owner-tag{color:var(--yes);font-weight:700}
+
+  .items{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+  .item{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);
+        border-radius:14px;overflow:hidden;box-shadow:var(--shadow);min-height:150px}
+  .item.locked{opacity:.62}
+  .shot{flex:0 0 118px;position:relative;align-self:stretch;margin:0;padding:0;border:0;
+        border-right:1px solid var(--line);background:var(--well);cursor:zoom-in;display:block}
+  .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+  .meta{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
+  .ref{font-size:10.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  h3{margin:0;font-size:15.5px;font-weight:600;letter-spacing:-.01em;line-height:1.35}
+  .price{margin:5px 0 0;font-size:19px;font-weight:650;letter-spacing:-.015em}
+  .price.free{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+              color:var(--yes);background:var(--yes-bg);align-self:flex-start;padding:4px 9px;border-radius:99px}
+
+  .vote{flex:0 0 96px;display:flex;flex-direction:column;justify-content:center;gap:7px;
+        padding:14px 14px 14px 0}
+  .vote button{border:1px solid var(--line);background:transparent;color:var(--muted);
+               padding:9px 0;border-radius:9px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+  .vote button[aria-pressed="true"][data-v="Y"]{background:var(--yes-bg);color:var(--yes);border-color:var(--yes)}
+  .vote button[aria-pressed="true"][data-v="N"]{background:var(--no-bg);color:var(--no);border-color:var(--no)}
+  .vote .note{font-size:11px;color:var(--muted);text-align:center;line-height:1.3}
+
+  /* results */
+  .tally{flex:0 0 168px;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:14px 14px 14px 0}
+  .chips{display:flex;gap:5px;flex-wrap:wrap}
+  .chip{font-size:10.5px;font-weight:700;padding:4px 7px;border-radius:7px;border:1px solid var(--line);
+        color:var(--muted);letter-spacing:.02em}
+  .chip.y{background:var(--yes-bg);color:var(--yes);border-color:transparent}
+  .chip.n{background:var(--no-bg);color:var(--no);border-color:transparent}
+  .verdict{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+  .verdict.buy{color:var(--yes)} .verdict.skip{color:var(--no)} .verdict.wait{color:var(--muted)}
+
+  .totals{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+        box-shadow:var(--shadow);min-width:132px}
+  .stat b{display:block;font-size:20px;letter-spacing:-.01em}
+  .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+  .stat.pending b{color:var(--muted)}
+
+  .hint{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px;
+        margin:18px 0;box-shadow:var(--shadow);font-size:14px;color:var(--muted)}
+  .hint b{color:var(--ink)} .hint ol{margin:8px 0 0;padding-left:20px} .hint li{margin:4px 0}
+
+  @media (max-width:620px){
+    .item{flex-wrap:wrap;min-height:0}
+    .shot{flex:0 0 96px}
+    .meta{flex:1 1 40%;padding:12px 14px}
+    .vote,.tally{flex:1 1 100%;flex-direction:row;padding:0 14px 14px;gap:8px}
+    .vote button{flex:1;padding:11px 0}
+    .vote .note{text-align:left;align-self:center}
+    .tally{flex-wrap:wrap;align-items:center}
   }
 
-  @media (max-width:560px) {
-    .item { flex-direction:column; min-height:0; }
-    .shot { flex:none; width:100%; height:240px; border-right:0; border-bottom:1px solid var(--line); }
-    .meta { padding:16px 18px 20px; }
-  }
-
-  /* lightbox */
-  dialog { border:0; padding:0; margin:0; background:transparent;
-            width:100%; height:100%; max-width:100vw; max-height:100vh; }
-  dialog::backdrop { background:rgba(0,0,0,.9); }
-  .lb { width:100%; height:100%; display:flex; flex-direction:column; align-items:center;
-         justify-content:center; gap:14px; padding:24px; cursor:zoom-out; }
-  .lb img { max-width:100%; max-height:calc(100% - 44px); object-fit:contain; border-radius:6px; }
-  .lb p { margin:0; color:#fff; font-size:14px; opacity:.85; text-align:center; }
-
-  footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--line);
-            color:var(--muted); font-size:13px; }
-
-  @media print {
-    body { background:#fff; }
-    .wrap { padding:0; max-width:none; }
-    .item { break-inside:avoid; box-shadow:none; }
-    .room { break-inside:avoid-page; }
-    .shot { cursor:default; }
-    footer { break-before:avoid; }
-  }
+  dialog{border:0;padding:0;margin:0;background:transparent;width:100%;height:100%;max-width:100vw;max-height:100vh}
+  dialog::backdrop{background:rgba(0,0,0,.9)}
+  .lb{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:14px;padding:24px;cursor:zoom-out}
+  .lb img{max-width:100%;max-height:calc(100% - 44px);object-fit:contain;border-radius:6px}
+  .lb p{margin:0;color:#fff;font-size:14px;opacity:.85;text-align:center}
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  [hidden]{display:none !important}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Acris Furniture</h1>
-    <p class="lede">36 items across 11 areas — 27 priced, 9 free.</p>
-    <div class="totals">
-      <div class="stat"><b>£1,340</b><span>Total all items</span></div>
-      <div class="stat"><b>£335</b><span>Per tenant (÷4)</span></div>
-      <div class="stat"><b>9</b><span>Free items</span></div>
-    </div>
-  </header>
+  <h1>Acris Furniture</h1>
+  <p class="lede">What the previous tenants left. Tick what you'd buy — everyone's answers add up on Results.</p>
 
-  <section class="room">
-    <h2>Living Room/Dining Room<span class="room-sub">6 items · £155</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-01.jpg" data-name="Sofa (one side broken but sound enough to use)" aria-label="Enlarge photo of Sofa (one side broken but sound enough to use)">
-          <img src="images/item-01.jpg" alt="Sofa (one side broken but sound enough to use)" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 1</span>
-          <h3>Sofa (one side broken but sound enough to use)</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-02.jpg" data-name="Coffee table" aria-label="Enlarge photo of Coffee table">
-          <img src="images/item-02.jpg" alt="Coffee table" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 2</span>
-          <h3>Coffee table</h3>
-          <p class="price">£25</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-03.jpg" data-name="Black side table" aria-label="Enlarge photo of Black side table">
-          <img src="images/item-03.jpg" alt="Black side table" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 3</span>
-          <h3>Black side table</h3>
-          <p class="price">£10</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-04.jpg" data-name="Wooden side table" aria-label="Enlarge photo of Wooden side table">
-          <img src="images/item-04.jpg" alt="Wooden side table" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 4</span>
-          <h3>Wooden side table</h3>
-          <p class="price">£5</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-05.jpg" data-name="Lamp" aria-label="Enlarge photo of Lamp">
-          <img src="images/item-05.jpg" alt="Lamp" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 5</span>
-          <h3>Lamp</h3>
-          <p class="price">£15</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-06.jpg" data-name="Dining table &amp; x6 chairs" aria-label="Enlarge photo of Dining table &amp; x6 chairs">
-          <img src="images/item-06.jpg" alt="Dining table &amp; x6 chairs" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 6</span>
-          <h3>Dining table &amp; x6 chairs</h3>
-          <p class="price">£100</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Kitchen<span class="room-sub">5 items · £195</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-07.jpg" data-name="Kitchen table &amp; x6 chairs" aria-label="Enlarge photo of Kitchen table &amp; x6 chairs">
-          <img src="images/item-07.jpg" alt="Kitchen table &amp; x6 chairs" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 7</span>
-          <h3>Kitchen table &amp; x6 chairs</h3>
-          <p class="price">£100</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-08.jpg" data-name="Black stools x4" aria-label="Enlarge photo of Black stools x4">
-          <img src="images/item-08.jpg" alt="Black stools x4" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 8</span>
-          <h3>Black stools x4</h3>
-          <p class="price">£25</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-09.jpg" data-name="Cream stools x2 (each end of island)" aria-label="Enlarge photo of Cream stools x2 (each end of island)">
-          <img src="images/item-09.jpg" alt="Cream stools x2 (each end of island)" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 9</span>
-          <h3>Cream stools x2 (each end of island)</h3>
-          <p class="price">£15</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-10.jpg" data-name="Blue drinks ladder" aria-label="Enlarge photo of Blue drinks ladder">
-          <img src="images/item-10.jpg" alt="Blue drinks ladder" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 10</span>
-          <h3>Blue drinks ladder</h3>
-          <p class="price">£35</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-11.jpg" data-name="Black side table" aria-label="Enlarge photo of Black side table">
-          <img src="images/item-11.jpg" alt="Black side table" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 11</span>
-          <h3>Black side table</h3>
-          <p class="price">£20</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Hall<span class="room-sub">2 items · £10</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-12.jpg" data-name="Shoe rack" aria-label="Enlarge photo of Shoe rack">
-          <img src="images/item-12.jpg" alt="Shoe rack" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 12</span>
-          <h3>Shoe rack</h3>
-          <p class="price">£5</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-13.jpg" data-name="Mirror" aria-label="Enlarge photo of Mirror">
-          <img src="images/item-13.jpg" alt="Mirror" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 13</span>
-          <h3>Mirror</h3>
-          <p class="price">£5</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Office<span class="room-sub">2 items · £45</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-14.jpg" data-name="Corner desk" aria-label="Enlarge photo of Corner desk">
-          <img src="images/item-14.jpg" alt="Corner desk" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 14</span>
-          <h3>Corner desk</h3>
-          <p class="price">£30</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-15.jpg" data-name="Desk chair" aria-label="Enlarge photo of Desk chair">
-          <img src="images/item-15.jpg" alt="Desk chair" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 15</span>
-          <h3>Desk chair</h3>
-          <p class="price">£15</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Bathroom Middle Floor<span class="room-sub">1 item · £10</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-16.jpg" data-name="Blue shelving" aria-label="Enlarge photo of Blue shelving">
-          <img src="images/item-16.jpg" alt="Blue shelving" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 16</span>
-          <h3>Blue shelving</h3>
-          <p class="price">£10</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Bedroom 1 Middle Floor<span class="room-sub">1 item · £5</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-17.jpg" data-name="Lamp" aria-label="Enlarge photo of Lamp">
-          <img src="images/item-17.jpg" alt="Lamp" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 17</span>
-          <h3>Lamp</h3>
-          <p class="price">£5</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Bedroom 2 Middle Floor<span class="room-sub">4 items · £0</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-18.jpg" data-name="Bed frame, mattress, headboard" aria-label="Enlarge photo of Bed frame, mattress, headboard">
-          <img src="images/item-18.jpg" alt="Bed frame, mattress, headboard" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 18</span>
-          <h3>Bed frame, mattress, headboard</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-19.jpg" data-name="Shelf" aria-label="Enlarge photo of Shelf">
-          <img src="images/item-19.jpg" alt="Shelf" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 19</span>
-          <h3>Shelf</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-20.jpg" data-name="Desk" aria-label="Enlarge photo of Desk">
-          <img src="images/item-20.jpg" alt="Desk" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 20</span>
-          <h3>Desk</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-21.jpg" data-name="Chest of drawers" aria-label="Enlarge photo of Chest of drawers">
-          <img src="images/item-21.jpg" alt="Chest of drawers" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 21</span>
-          <h3>Chest of drawers</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Bedroom 3 - Top Floor back<span class="room-sub">4 items · £180</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-22.jpg" data-name="Bed frame, mattress, headboard" aria-label="Enlarge photo of Bed frame, mattress, headboard">
-          <img src="images/item-22.jpg" alt="Bed frame, mattress, headboard" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 22</span>
-          <h3>Bed frame, mattress, headboard</h3>
-          <p class="price">£110</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-23.jpg" data-name="White side tables x2" aria-label="Enlarge photo of White side tables x2">
-          <img src="images/item-23.jpg" alt="White side tables x2" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 23</span>
-          <h3>White side tables x2</h3>
-          <p class="price">£40</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-24.jpg" data-name="White Lamps x2" aria-label="Enlarge photo of White Lamps x2">
-          <img src="images/item-24.jpg" alt="White Lamps x2" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 24</span>
-          <h3>White Lamps x2</h3>
-          <p class="price">£15</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-25.jpg" data-name="Black mirror" aria-label="Enlarge photo of Black mirror">
-          <img src="images/item-25.jpg" alt="Black mirror" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 25</span>
-          <h3>Black mirror</h3>
-          <p class="price">£15</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Top Bathroom<span class="room-sub">1 item · £10</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-26.jpg" data-name="Wooden shelving" aria-label="Enlarge photo of Wooden shelving">
-          <img src="images/item-26.jpg" alt="Wooden shelving" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 26</span>
-          <h3>Wooden shelving</h3>
-          <p class="price">£10</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Bedroom 4 - Attic<span class="room-sub">5 items · £380</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-27.jpg" data-name="Bed frame inc headboard, mattress" aria-label="Enlarge photo of Bed frame inc headboard, mattress">
-          <img src="images/item-27.jpg" alt="Bed frame inc headboard, mattress" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 27</span>
-          <h3>Bed frame inc headboard, mattress</h3>
-          <p class="price">£150</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-28.jpg" data-name="Wardrobe" aria-label="Enlarge photo of Wardrobe">
-          <img src="images/item-28.jpg" alt="Wardrobe" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 28</span>
-          <h3>Wardrobe</h3>
-          <p class="price">£100</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-29.jpg" data-name="Drawers" aria-label="Enlarge photo of Drawers">
-          <img src="images/item-29.jpg" alt="Drawers" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 29</span>
-          <h3>Drawers</h3>
-          <p class="price">£60</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-30.jpg" data-name="Bedside tables x2" aria-label="Enlarge photo of Bedside tables x2">
-          <img src="images/item-30.jpg" alt="Bedside tables x2" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 30</span>
-          <h3>Bedside tables x2</h3>
-          <p class="price">£40</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-31.jpg" data-name="Desk (excludes desk chair)" aria-label="Enlarge photo of Desk (excludes desk chair)">
-          <img src="images/item-31.jpg" alt="Desk (excludes desk chair)" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 31</span>
-          <h3>Desk (excludes desk chair)</h3>
-          <p class="price">£30</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="room">
-    <h2>Other<span class="room-sub">5 items · £350</span></h2>
-    <ul class="items">
-      <li class="item">
-        <button class="shot" data-full="images/item-32.jpg" data-name="Christmas tree (in box in cellar with decorations)" aria-label="Enlarge photo of Christmas tree (in box in cellar with decorations)">
-          <img src="images/item-32.jpg" alt="Christmas tree (in box in cellar with decorations)" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 32</span>
-          <h3>Christmas tree (in box in cellar with decorations)</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-33.jpg" data-name="Books on shelving" aria-label="Enlarge photo of Books on shelving">
-          <img src="images/item-33.jpg" alt="Books on shelving" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 33</span>
-          <h3>Books on shelving</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-34.jpg" data-name="Cricket set" aria-label="Enlarge photo of Cricket set">
-          <img src="images/item-34.jpg" alt="Cricket set" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 34</span>
-          <h3>Cricket set</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-35.jpg" data-name="Webber Genesis II BBQ (Includes pizza stone)" aria-label="Enlarge photo of Webber Genesis II BBQ (Includes pizza stone)">
-          <img src="images/item-35.jpg" alt="Webber Genesis II BBQ (Includes pizza stone)" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 35</span>
-          <h3>Webber Genesis II BBQ (Includes pizza stone)</h3>
-          <p class="price">£350</p>
-        </div>
-      </li>
-      <li class="item">
-        <button class="shot" data-full="images/item-36.jpg" data-name="Rug" aria-label="Enlarge photo of Rug">
-          <img src="images/item-36.jpg" alt="Rug" loading="lazy" decoding="async">
-        </button>
-        <div class="meta">
-          <span class="ref">Ref 36</span>
-          <h3>Rug</h3>
-          <p class="price free">Free</p>
-        </div>
-      </li>
-    </ul>
-  </section>
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+  <div id="banner" class="banner" hidden></div>
+  <main id="view"></main>
 
-  <footer>Generated from <em>34 AcrisFurniture.xlsx</em>. Prices in GBP. Click any photo to enlarge.</footer>
+  <footer>
+    36 items from <em>34 AcrisFurniture.xlsx</em>. Prices in GBP. Tap any photo to enlarge.<br>
+    Your answers save on this device — use <b>Share my answers</b> to send them to the group.
+  </footer>
 </div>
 
 <dialog id="lb"><div class="lb"><img alt=""><p></p></div></dialog>
+
 <script>
-  const dlg = document.getElementById('lb');
-  const img = dlg.querySelector('img'), cap = dlg.querySelector('p');
-  document.querySelectorAll('.shot').forEach(b => b.addEventListener('click', () => {
-    img.src = b.dataset.full; img.alt = b.dataset.name; cap.textContent = b.dataset.name;
-    dlg.showModal();
-  }));
-  dlg.addEventListener('click', () => dlg.close());
-  dlg.addEventListener('close', () => { img.src = ''; });
+const DATA = {"people": ["Maxim", "Matt", "Frank", "Sharp"], "items": [{"ref": 1, "room": "Living Room/Dining Room", "name": "Sofa (one side broken but sound enough to use)", "price": 0.0, "free": true, "img": "images/item-01.jpg", "owner": null}, {"ref": 2, "room": "Living Room/Dining Room", "name": "Coffee table", "price": 25.0, "free": false, "img": "images/item-02.jpg", "owner": null}, {"ref": 3, "room": "Living Room/Dining Room", "name": "Black side table", "price": 10.0, "free": false, "img": "images/item-03.jpg", "owner": null}, {"ref": 4, "room": "Living Room/Dining Room", "name": "Wooden side table", "price": 5.0, "free": false, "img": "images/item-04.jpg", "owner": null}, {"ref": 5, "room": "Living Room/Dining Room", "name": "Lamp", "price": 15.0, "free": false, "img": "images/item-05.jpg", "owner": null}, {"ref": 6, "room": "Living Room/Dining Room", "name": "Dining table & x6 chairs", "price": 100.0, "free": false, "img": "images/item-06.jpg", "owner": null}, {"ref": 7, "room": "Kitchen", "name": "Kitchen table & x6 chairs", "price": 100.0, "free": false, "img": "images/item-07.jpg", "owner": null}, {"ref": 8, "room": "Kitchen", "name": "Black stools x4", "price": 25.0, "free": false, "img": "images/item-08.jpg", "owner": null}, {"ref": 9, "room": "Kitchen", "name": "Cream stools x2 (each end of island)", "price": 15.0, "free": false, "img": "images/item-09.jpg", "owner": null}, {"ref": 10, "room": "Kitchen", "name": "Blue drinks ladder", "price": 35.0, "free": false, "img": "images/item-10.jpg", "owner": null}, {"ref": 11, "room": "Kitchen", "name": "Black side table", "price": 20.0, "free": false, "img": "images/item-11.jpg", "owner": null}, {"ref": 12, "room": "Hall", "name": "Shoe rack", "price": 5.0, "free": false, "img": "images/item-12.jpg", "owner": null}, {"ref": 13, "room": "Hall", "name": "Mirror", "price": 5.0, "free": false, "img": "images/item-13.jpg", "owner": null}, {"ref": 14, "room": "Office", "name": "Corner desk", "price": 30.0, "free": false, "img": "images/item-14.jpg", "owner": null}, {"ref": 15, "room": "Office", "name": "Desk chair", "price": 15.0, "free": false, "img": "images/item-15.jpg", "owner": null}, {"ref": 16, "room": "Bathroom Middle Floor", "name": "Blue shelving", "price": 10.0, "free": false, "img": "images/item-16.jpg", "owner": null}, {"ref": 17, "room": "Bedroom 1 Middle Floor", "name": "Lamp", "price": 5.0, "free": false, "img": "images/item-17.jpg", "owner": null}, {"ref": 18, "room": "Bedroom 2 Middle Floor", "name": "Bed frame, mattress, headboard", "price": 0.0, "free": true, "img": "images/item-18.jpg", "owner": "Maxim"}, {"ref": 19, "room": "Bedroom 2 Middle Floor", "name": "Shelf", "price": 0.0, "free": true, "img": "images/item-19.jpg", "owner": "Maxim"}, {"ref": 20, "room": "Bedroom 2 Middle Floor", "name": "Desk", "price": 0.0, "free": true, "img": "images/item-20.jpg", "owner": "Maxim"}, {"ref": 21, "room": "Bedroom 2 Middle Floor", "name": "Chest of drawers", "price": 0.0, "free": true, "img": "images/item-21.jpg", "owner": "Maxim"}, {"ref": 22, "room": "Bedroom 3 - Top Floor back", "name": "Bed frame, mattress, headboard", "price": 110.0, "free": false, "img": "images/item-22.jpg", "owner": "Frank"}, {"ref": 23, "room": "Bedroom 3 - Top Floor back", "name": "White side tables x2", "price": 40.0, "free": false, "img": "images/item-23.jpg", "owner": "Frank"}, {"ref": 24, "room": "Bedroom 3 - Top Floor back", "name": "White Lamps x2", "price": 15.0, "free": false, "img": "images/item-24.jpg", "owner": "Frank"}, {"ref": 25, "room": "Bedroom 3 - Top Floor back", "name": "Black mirror", "price": 15.0, "free": false, "img": "images/item-25.jpg", "owner": "Frank"}, {"ref": 26, "room": "Top Bathroom", "name": "Wooden shelving", "price": 10.0, "free": false, "img": "images/item-26.jpg", "owner": null}, {"ref": 27, "room": "Bedroom 4 - Attic", "name": "Bed frame inc headboard, mattress", "price": 150.0, "free": false, "img": "images/item-27.jpg", "owner": "Matt"}, {"ref": 28, "room": "Bedroom 4 - Attic", "name": "Wardrobe", "price": 100.0, "free": false, "img": "images/item-28.jpg", "owner": "Matt"}, {"ref": 29, "room": "Bedroom 4 - Attic", "name": "Drawers", "price": 60.0, "free": false, "img": "images/item-29.jpg", "owner": "Matt"}, {"ref": 30, "room": "Bedroom 4 - Attic", "name": "Bedside tables x2", "price": 40.0, "free": false, "img": "images/item-30.jpg", "owner": "Matt"}, {"ref": 31, "room": "Bedroom 4 - Attic", "name": "Desk (excludes desk chair)", "price": 30.0, "free": false, "img": "images/item-31.jpg", "owner": "Matt"}, {"ref": 32, "room": "Other", "name": "Christmas tree (in box in cellar with decorations)", "price": 0.0, "free": true, "img": "images/item-32.jpg", "owner": null}, {"ref": 33, "room": "Other", "name": "Books on shelving", "price": 0.0, "free": true, "img": "images/item-33.jpg", "owner": null}, {"ref": 34, "room": "Other", "name": "Cricket set", "price": 0.0, "free": true, "img": "images/item-34.jpg", "owner": null}, {"ref": 35, "room": "Other", "name": "Webber Genesis II BBQ (Includes pizza stone)", "price": 350.0, "free": false, "img": "images/item-35.jpg", "owner": null}, {"ref": 36, "room": "Other", "name": "Rug", "price": 0.0, "free": true, "img": "images/item-36.jpg", "owner": null}]};
+const PEOPLE = DATA.people, ITEMS = DATA.items;
+const KEY = 'acris-votes-v1';
+const money = n => '£' + n.toLocaleString('en-GB', {maximumFractionDigits:0});
+
+/* votes = { Person: { ref: 'Y'|'N' } } */
+let votes = {};
+try { votes = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ votes = {}; }
+PEOPLE.forEach(p => votes[p] = votes[p] || {});
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(votes)); } catch(e){} };
+
+/* ---- compact share encoding: "#v=Name.<36 chars of -,Y,N>" joined by "~" ---- */
+const encodePerson = p => p + '.' + ITEMS.map(i => votes[p][i.ref] || '-').join('');
+function importHash(){
+  const m = location.hash.match(/[#&]v=([^&]+)/);
+  if (!m) return null;
+  const loaded = [];
+  decodeURIComponent(m[1]).split('~').forEach(blob => {
+    const dot = blob.indexOf('.');
+    if (dot < 1) return;
+    const name = blob.slice(0, dot), chars = blob.slice(dot + 1);
+    if (!PEOPLE.includes(name)) return;
+    votes[name] = {};
+    ITEMS.forEach((it, ix) => { const c = chars[ix]; if (c === 'Y' || c === 'N') votes[name][it.ref] = c; });
+    loaded.push(name);
+  });
+  if (loaded.length){ save(); history.replaceState(null, '', location.pathname + location.search); }
+  return loaded.length ? loaded : null;
+}
+const imported = importHash();
+
+/* ---- who am I: remembered per device ---- */
+let me = localStorage.getItem(KEY + ':me');
+if (!PEOPLE.includes(me)) me = null;
+
+const answered  = p => ITEMS.filter(i => votes[p][i.ref]).length;
+const votableBy = (it, p) => !it.owner || it.owner === p;   // your room = your call
+const myItems   = p => ITEMS.filter(i => votableBy(i, p));
+const isDone    = p => myItems(p).every(i => votes[p][i.ref]);
+
+/* ---- tabs ---- */
+let tab = imported ? 'Results' : (me || PEOPLE[0]);
+const tabsEl = document.getElementById('tabs'), viewEl = document.getElementById('view');
+
+function renderTabs(){
+  tabsEl.innerHTML = '';
+  [...PEOPLE, 'Results'].forEach(name => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.role = 'tab';
+    b.setAttribute('aria-selected', String(tab === name));
+    if (name === 'Results'){
+      b.textContent = 'Results';
+    } else {
+      const n = answered(name), total = myItems(name).length;
+      b.innerHTML = '<span class="dot' + (isDone(name) ? ' done' : '') + '"></span>' +
+                    name + (n ? ' <span style="opacity:.6;font-weight:500">' + n + '/' + total + '</span>' : '');
+    }
+    b.onclick = () => { tab = name; render(); };
+    tabsEl.appendChild(b);
+  });
+}
+
+/* ---- grouping ---- */
+function groups(){
+  const g = [];
+  ITEMS.forEach(it => {
+    if (!g.length || g[g.length-1].room !== it.room) g.push({room: it.room, owner: it.owner, list: []});
+    g[g.length-1].list.push(it);
+  });
+  return g;
+}
+
+function shot(it){
+  return '<button class="shot" data-full="' + it.img + '" data-name="' + esc(it.name) + '" ' +
+         'aria-label="Enlarge photo of ' + esc(it.name) + '">' +
+         '<img src="' + it.img + '" alt="' + esc(it.name) + '" loading="lazy" decoding="async"></button>';
+}
+function metaBlock(it){
+  return '<div class="meta"><span class="ref">Ref ' + it.ref + '</span><h3>' + esc(it.name) + '</h3>' +
+         (it.free ? '<p class="price free">Free</p>' : '<p class="price">' + money(it.price) + '</p>') + '</div>';
+}
+function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ---- a person's voting sheet ---- */
+function renderPerson(p){
+  let h = '<div class="whoami"><p>Voting as <b>' + p + '</b>' +
+          (me === p ? ' · saved on this device' : '') + '</p><div style="display:flex;gap:8px">' +
+          (me === p ? '' : '<button class="btn ghost" id="setme">This is me</button>') +
+          '<button class="btn" id="share">Share my answers</button></div></div>';
+
+  groups().forEach(g => {
+    const mine = g.owner === p, theirs = g.owner && g.owner !== p;
+    const sub = g.list.reduce((a,i) => a + i.price, 0);
+    h += '<section class="room"><h2>' + esc(g.room) +
+         (g.owner ? ' <span class="owner-tag">· ' + g.owner + "'s room</span>" : '') +
+         '<span class="room-sub">' + g.list.length + ' item' + (g.list.length>1?'s':'') + ' · ' + money(sub) +
+         '</span></h2><ul class="items">';
+    g.list.forEach(it => {
+      const v = votes[p][it.ref];
+      h += '<li class="item' + (theirs ? ' locked' : '') + '">' + shot(it) + metaBlock(it) +
+           '<div class="vote">';
+      if (theirs){
+        h += '<span class="note">' + g.owner + "'s<br>call</span>";
+      } else {
+        h += '<button data-r="' + it.ref + '" data-v="Y" aria-pressed="' + (v==='Y') + '">Yes</button>' +
+             '<button data-r="' + it.ref + '" data-v="N" aria-pressed="' + (v==='N') + '">No</button>' +
+             (mine ? '<span class="note">your room</span>' : '');
+      }
+      h += '</div></li>';
+    });
+    h += '</ul></section>';
+  });
+  viewEl.innerHTML = h;
+
+  const setme = document.getElementById('setme');
+  if (setme) setme.onclick = () => { me = p; localStorage.setItem(KEY + ':me', p); render(); };
+  document.getElementById('share').onclick = () => shareAnswers(p);
+
+  viewEl.querySelectorAll('.vote button[data-r]').forEach(b => b.onclick = () => {
+    const r = b.dataset.r, v = b.dataset.v;
+    if (votes[p][r] === v) delete votes[p][r]; else votes[p][r] = v;
+    save(); render();
+  });
+}
+
+async function shareAnswers(p){
+  const url = location.origin + location.pathname + '#v=' + encodeURIComponent(encodePerson(p));
+  const text = p + "'s furniture picks — open this to add them to the tally:";
+  try {
+    if (navigator.share) { await navigator.share({title:'Acris Furniture', text, url}); return; }
+    await navigator.clipboard.writeText(url);
+    flash('Link copied — send it to the group chat.');
+  } catch(e){ prompt('Copy this link and send it to the group:', url); }
+}
+
+/* ---- results ---- */
+function renderResults(){
+  const voted = PEOPLE.filter(p => answered(p) > 0);
+  const owe = {}; PEOPLE.forEach(p => owe[p] = 0);
+  let groupTotal = 0, undecided = 0;
+
+  let body = '';
+  groups().forEach(g => {
+    body += '<section class="room"><h2>' + esc(g.room) +
+            (g.owner ? ' <span class="owner-tag">· ' + g.owner + "'s room</span>" : '') +
+            '</h2><ul class="items">';
+    g.list.forEach(it => {
+      let verdict, cls;
+      if (it.owner){
+        const v = votes[it.owner][it.ref];
+        verdict = v === 'Y' ? 'Buying' : v === 'N' ? 'Skipping' : 'Not answered';
+        cls = v === 'Y' ? 'buy' : v === 'N' ? 'skip' : 'wait';
+        if (v === 'Y'){ owe[it.owner] += it.price; groupTotal += it.price; }
+        if (!v) undecided++;
+      } else {
+        const ys = PEOPLE.filter(p => votes[p][it.ref] === 'Y').length;
+        const ns = PEOPLE.filter(p => votes[p][it.ref] === 'N').length;
+        if (!ys && !ns){ verdict = 'Not answered'; cls = 'wait'; undecided++; }
+        else if (ys > ns){ verdict = 'Buying · ' + ys + '–' + ns; cls = 'buy';
+                           groupTotal += it.price; PEOPLE.forEach(p => owe[p] += it.price/4); }
+        else if (ns > ys){ verdict = 'Skipping · ' + ys + '–' + ns; cls = 'skip'; }
+        else { verdict = 'Split ' + ys + '–' + ns; cls = 'wait'; }
+      }
+      const chips = PEOPLE.map(p => {
+        if (it.owner && it.owner !== p) return '';
+        const v = votes[p][it.ref];
+        return '<span class="chip' + (v==='Y'?' y':v==='N'?' n':'') + '">' +
+               p + (v === 'Y' ? ' ✓' : v === 'N' ? ' ✗' : ' –') + '</span>';
+      }).join('');
+      body += '<li class="item">' + shot(it) + metaBlock(it) +
+              '<div class="tally"><div class="chips">' + chips + '</div>' +
+              '<span class="verdict ' + cls + '">' + verdict + '</span></div></li>';
+    });
+    body += '</ul></section>';
+  });
+
+  let head = '<div class="totals">' +
+    '<div class="stat"><b>' + money(groupTotal) + '</b><span>Agreed so far</span></div>' +
+    PEOPLE.map(p => '<div class="stat' + (answered(p) ? '' : ' pending') + '"><b>' + money(Math.round(owe[p])) +
+      '</b><span>' + p + (answered(p) ? '' : ' · no answers') + '</span></div>').join('') +
+    '</div>';
+
+  if (voted.length < PEOPLE.length){
+    const missing = PEOPLE.filter(p => !answered(p));
+    head += '<div class="hint"><b>Waiting on ' + missing.join(', ') + '.</b>' +
+      '<ol><li>Send everyone this page.</li>' +
+      '<li>They open their own tab and tick Yes/No.</li>' +
+      '<li>They tap <b>Share my answers</b> and send the link back.</li>' +
+      '<li>Open each link here — the tally fills in.</li></ol></div>';
+  }
+  if (undecided) head += '<p class="lede" style="margin:12px 0 0">' + undecided + ' item' +
+    (undecided>1?'s':'') + ' still undecided. Shared items split 4 ways; bedroom items are that person\'s own cost.</p>';
+
+  viewEl.innerHTML = head + body;
+}
+
+function flash(msg){
+  const b = document.getElementById('banner');
+  b.textContent = msg; b.hidden = false;
+  setTimeout(() => { b.hidden = true; }, 4000);
+}
+
+function render(){
+  renderTabs();
+  if (tab === 'Results') renderResults(); else renderPerson(tab);
+  wireShots();
+  window.scrollTo({top:0});
+}
+
+/* lightbox */
+const dlg = document.getElementById('lb'), lbImg = dlg.querySelector('img'), lbCap = dlg.querySelector('p');
+function wireShots(){
+  viewEl.querySelectorAll('.shot').forEach(b => b.onclick = () => {
+    lbImg.src = b.dataset.full; lbImg.alt = b.dataset.name; lbCap.textContent = b.dataset.name; dlg.showModal();
+  });
+}
+dlg.addEventListener('click', () => dlg.close());
+dlg.addEventListener('close', () => { lbImg.src = ''; });
+
+render();
+if (imported) flash('Loaded ' + imported.join(' & ') + "'s answers into the tally.");
 </script>
 </body>
 </html>
