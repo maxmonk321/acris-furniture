@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acris Furniture — Items for Sale</title>
+<style>
+  :root {
+    --bg:#faf9f7; --card:#fff; --ink:#1c1b19; --muted:#6f6b66;
+    --line:#e6e2dc; --well:#f1eee9; --free:#2f7d5d; --free-bg:#e7f4ee;
+    --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 20px rgba(0,0,0,.045);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#161514; --card:#211f1d; --ink:#f2efeb; --muted:#a29c94;
+      --line:#332f2c; --well:#1a1917; --free:#7fd4ab; --free-bg:#1b3a2c;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+    }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:860px; margin:0 auto; padding:48px 20px 80px; }
+
+  header { margin-bottom:8px; }
+  h1 { font-size:clamp(28px,5vw,40px); letter-spacing:-.02em; margin:0 0 6px; }
+  .lede { color:var(--muted); margin:0 0 24px; }
+  .totals { display:flex; flex-wrap:wrap; gap:10px; }
+  .stat {
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:12px 16px; box-shadow:var(--shadow);
+  }
+  .stat b { display:block; font-size:20px; letter-spacing:-.01em; }
+  .stat span { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; }
+
+  .room { margin-top:40px; }
+  h2 {
+    font-size:12px; text-transform:uppercase; letter-spacing:.11em; color:var(--muted);
+    font-weight:600; margin:0 0 14px; padding-bottom:10px; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+  }
+  .room-sub { letter-spacing:.02em; text-transform:none; font-weight:400; white-space:nowrap; }
+
+  .items { list-style:none; margin:0; padding:0; display:grid; gap:12px; }
+  .item {
+    display:flex; align-items:stretch; gap:0; min-height:216px;
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; box-shadow:var(--shadow);
+  }
+  /* Image is absolutely positioned so it never drives row height: every row
+     is a uniform 216px regardless of whether the photo is portrait or landscape. */
+  .shot {
+    flex:0 0 172px; position:relative; align-self:stretch;
+    margin:0; padding:0; border:0; border-right:1px solid var(--line);
+    background:var(--well); cursor:zoom-in; display:block;
+  }
+  .shot img {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:contain;           /* never crop — the whole item stays visible */
+    display:block;
+  }
+  .meta { flex:1; padding:18px 22px; display:flex; flex-direction:column; justify-content:center; gap:3px; }
+  .ref { font-size:11px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
+  h3 { margin:0; font-size:17px; font-weight:600; letter-spacing:-.01em; line-height:1.35; }
+  .price { margin:6px 0 0; font-size:22px; font-weight:650; letter-spacing:-.015em; }
+  .price.free {
+    font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em;
+    color:var(--free); background:var(--free-bg); align-self:flex-start;
+    padding:4px 10px; border-radius:99px;
+  }
+
+  @media (max-width:560px) {
+    .item { flex-direction:column; min-height:0; }
+    .shot { flex:none; width:100%; height:240px; border-right:0; border-bottom:1px solid var(--line); }
+    .meta { padding:16px 18px 20px; }
+  }
+
+  /* lightbox */
+  dialog { border:0; padding:0; margin:0; background:transparent;
+            width:100%; height:100%; max-width:100vw; max-height:100vh; }
+  dialog::backdrop { background:rgba(0,0,0,.9); }
+  .lb { width:100%; height:100%; display:flex; flex-direction:column; align-items:center;
+         justify-content:center; gap:14px; padding:24px; cursor:zoom-out; }
+  .lb img { max-width:100%; max-height:calc(100% - 44px); object-fit:contain; border-radius:6px; }
+  .lb p { margin:0; color:#fff; font-size:14px; opacity:.85; text-align:center; }
+
+  footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--line);
+            color:var(--muted); font-size:13px; }
+
+  @media print {
+    body { background:#fff; }
+    .wrap { padding:0; max-width:none; }
+    .item { break-inside:avoid; box-shadow:none; }
+    .room { break-inside:avoid-page; }
+    .shot { cursor:default; }
+    footer { break-before:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Acris Furniture</h1>
+    <p class="lede">36 items across 11 areas — 27 priced, 9 free.</p>
+    <div class="totals">
+      <div class="stat"><b>£1,340</b><span>Total all items</span></div>
+      <div class="stat"><b>£335</b><span>Per tenant (÷4)</span></div>
+      <div class="stat"><b>9</b><span>Free items</span></div>
+    </div>
+  </header>
+
+  <section class="room">
+    <h2>Living Room/Dining Room<span class="room-sub">6 items · £155</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-01.jpg" data-name="Sofa (one side broken but sound enough to use)" aria-label="Enlarge photo of Sofa (one side broken but sound enough to use)">
+          <img src="images/item-01.jpg" alt="Sofa (one side broken but sound enough to use)" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 1</span>
+          <h3>Sofa (one side broken but sound enough to use)</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-02.jpg" data-name="Coffee table" aria-label="Enlarge photo of Coffee table">
+          <img src="images/item-02.jpg" alt="Coffee table" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 2</span>
+          <h3>Coffee table</h3>
+          <p class="price">£25</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-03.jpg" data-name="Black side table" aria-label="Enlarge photo of Black side table">
+          <img src="images/item-03.jpg" alt="Black side table" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 3</span>
+          <h3>Black side table</h3>
+          <p class="price">£10</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-04.jpg" data-name="Wooden side table" aria-label="Enlarge photo of Wooden side table">
+          <img src="images/item-04.jpg" alt="Wooden side table" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 4</span>
+          <h3>Wooden side table</h3>
+          <p class="price">£5</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-05.jpg" data-name="Lamp" aria-label="Enlarge photo of Lamp">
+          <img src="images/item-05.jpg" alt="Lamp" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 5</span>
+          <h3>Lamp</h3>
+          <p class="price">£15</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-06.jpg" data-name="Dining table &amp; x6 chairs" aria-label="Enlarge photo of Dining table &amp; x6 chairs">
+          <img src="images/item-06.jpg" alt="Dining table &amp; x6 chairs" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 6</span>
+          <h3>Dining table &amp; x6 chairs</h3>
+          <p class="price">£100</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Kitchen<span class="room-sub">5 items · £195</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-07.jpg" data-name="Kitchen table &amp; x6 chairs" aria-label="Enlarge photo of Kitchen table &amp; x6 chairs">
+          <img src="images/item-07.jpg" alt="Kitchen table &amp; x6 chairs" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 7</span>
+          <h3>Kitchen table &amp; x6 chairs</h3>
+          <p class="price">£100</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-08.jpg" data-name="Black stools x4" aria-label="Enlarge photo of Black stools x4">
+          <img src="images/item-08.jpg" alt="Black stools x4" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 8</span>
+          <h3>Black stools x4</h3>
+          <p class="price">£25</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-09.jpg" data-name="Cream stools x2 (each end of island)" aria-label="Enlarge photo of Cream stools x2 (each end of island)">
+          <img src="images/item-09.jpg" alt="Cream stools x2 (each end of island)" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 9</span>
+          <h3>Cream stools x2 (each end of island)</h3>
+          <p class="price">£15</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-10.jpg" data-name="Blue drinks ladder" aria-label="Enlarge photo of Blue drinks ladder">
+          <img src="images/item-10.jpg" alt="Blue drinks ladder" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 10</span>
+          <h3>Blue drinks ladder</h3>
+          <p class="price">£35</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-11.jpg" data-name="Black side table" aria-label="Enlarge photo of Black side table">
+          <img src="images/item-11.jpg" alt="Black side table" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 11</span>
+          <h3>Black side table</h3>
+          <p class="price">£20</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Hall<span class="room-sub">2 items · £10</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-12.jpg" data-name="Shoe rack" aria-label="Enlarge photo of Shoe rack">
+          <img src="images/item-12.jpg" alt="Shoe rack" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 12</span>
+          <h3>Shoe rack</h3>
+          <p class="price">£5</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-13.jpg" data-name="Mirror" aria-label="Enlarge photo of Mirror">
+          <img src="images/item-13.jpg" alt="Mirror" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 13</span>
+          <h3>Mirror</h3>
+          <p class="price">£5</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Office<span class="room-sub">2 items · £45</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-14.jpg" data-name="Corner desk" aria-label="Enlarge photo of Corner desk">
+          <img src="images/item-14.jpg" alt="Corner desk" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 14</span>
+          <h3>Corner desk</h3>
+          <p class="price">£30</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-15.jpg" data-name="Desk chair" aria-label="Enlarge photo of Desk chair">
+          <img src="images/item-15.jpg" alt="Desk chair" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 15</span>
+          <h3>Desk chair</h3>
+          <p class="price">£15</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Bathroom Middle Floor<span class="room-sub">1 item · £10</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-16.jpg" data-name="Blue shelving" aria-label="Enlarge photo of Blue shelving">
+          <img src="images/item-16.jpg" alt="Blue shelving" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 16</span>
+          <h3>Blue shelving</h3>
+          <p class="price">£10</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Bedroom 1 Middle Floor<span class="room-sub">1 item · £5</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-17.jpg" data-name="Lamp" aria-label="Enlarge photo of Lamp">
+          <img src="images/item-17.jpg" alt="Lamp" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 17</span>
+          <h3>Lamp</h3>
+          <p class="price">£5</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Bedroom 2 Middle Floor<span class="room-sub">4 items · £0</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-18.jpg" data-name="Bed frame, mattress, headboard" aria-label="Enlarge photo of Bed frame, mattress, headboard">
+          <img src="images/item-18.jpg" alt="Bed frame, mattress, headboard" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 18</span>
+          <h3>Bed frame, mattress, headboard</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-19.jpg" data-name="Shelf" aria-label="Enlarge photo of Shelf">
+          <img src="images/item-19.jpg" alt="Shelf" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 19</span>
+          <h3>Shelf</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-20.jpg" data-name="Desk" aria-label="Enlarge photo of Desk">
+          <img src="images/item-20.jpg" alt="Desk" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 20</span>
+          <h3>Desk</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-21.jpg" data-name="Chest of drawers" aria-label="Enlarge photo of Chest of drawers">
+          <img src="images/item-21.jpg" alt="Chest of drawers" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 21</span>
+          <h3>Chest of drawers</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Bedroom 3 - Top Floor back<span class="room-sub">4 items · £180</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-22.jpg" data-name="Bed frame, mattress, headboard" aria-label="Enlarge photo of Bed frame, mattress, headboard">
+          <img src="images/item-22.jpg" alt="Bed frame, mattress, headboard" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 22</span>
+          <h3>Bed frame, mattress, headboard</h3>
+          <p class="price">£110</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-23.jpg" data-name="White side tables x2" aria-label="Enlarge photo of White side tables x2">
+          <img src="images/item-23.jpg" alt="White side tables x2" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 23</span>
+          <h3>White side tables x2</h3>
+          <p class="price">£40</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-24.jpg" data-name="White Lamps x2" aria-label="Enlarge photo of White Lamps x2">
+          <img src="images/item-24.jpg" alt="White Lamps x2" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 24</span>
+          <h3>White Lamps x2</h3>
+          <p class="price">£15</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-25.jpg" data-name="Black mirror" aria-label="Enlarge photo of Black mirror">
+          <img src="images/item-25.jpg" alt="Black mirror" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 25</span>
+          <h3>Black mirror</h3>
+          <p class="price">£15</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Top Bathroom<span class="room-sub">1 item · £10</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-26.jpg" data-name="Wooden shelving" aria-label="Enlarge photo of Wooden shelving">
+          <img src="images/item-26.jpg" alt="Wooden shelving" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 26</span>
+          <h3>Wooden shelving</h3>
+          <p class="price">£10</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Bedroom 4 - Attic<span class="room-sub">5 items · £380</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-27.jpg" data-name="Bed frame inc headboard, mattress" aria-label="Enlarge photo of Bed frame inc headboard, mattress">
+          <img src="images/item-27.jpg" alt="Bed frame inc headboard, mattress" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 27</span>
+          <h3>Bed frame inc headboard, mattress</h3>
+          <p class="price">£150</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-28.jpg" data-name="Wardrobe" aria-label="Enlarge photo of Wardrobe">
+          <img src="images/item-28.jpg" alt="Wardrobe" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 28</span>
+          <h3>Wardrobe</h3>
+          <p class="price">£100</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-29.jpg" data-name="Drawers" aria-label="Enlarge photo of Drawers">
+          <img src="images/item-29.jpg" alt="Drawers" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 29</span>
+          <h3>Drawers</h3>
+          <p class="price">£60</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-30.jpg" data-name="Bedside tables x2" aria-label="Enlarge photo of Bedside tables x2">
+          <img src="images/item-30.jpg" alt="Bedside tables x2" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 30</span>
+          <h3>Bedside tables x2</h3>
+          <p class="price">£40</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-31.jpg" data-name="Desk (excludes desk chair)" aria-label="Enlarge photo of Desk (excludes desk chair)">
+          <img src="images/item-31.jpg" alt="Desk (excludes desk chair)" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 31</span>
+          <h3>Desk (excludes desk chair)</h3>
+          <p class="price">£30</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="room">
+    <h2>Other<span class="room-sub">5 items · £350</span></h2>
+    <ul class="items">
+      <li class="item">
+        <button class="shot" data-full="images/item-32.jpg" data-name="Christmas tree (in box in cellar with decorations)" aria-label="Enlarge photo of Christmas tree (in box in cellar with decorations)">
+          <img src="images/item-32.jpg" alt="Christmas tree (in box in cellar with decorations)" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 32</span>
+          <h3>Christmas tree (in box in cellar with decorations)</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-33.jpg" data-name="Books on shelving" aria-label="Enlarge photo of Books on shelving">
+          <img src="images/item-33.jpg" alt="Books on shelving" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 33</span>
+          <h3>Books on shelving</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-34.jpg" data-name="Cricket set" aria-label="Enlarge photo of Cricket set">
+          <img src="images/item-34.jpg" alt="Cricket set" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 34</span>
+          <h3>Cricket set</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-35.jpg" data-name="Webber Genesis II BBQ (Includes pizza stone)" aria-label="Enlarge photo of Webber Genesis II BBQ (Includes pizza stone)">
+          <img src="images/item-35.jpg" alt="Webber Genesis II BBQ (Includes pizza stone)" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 35</span>
+          <h3>Webber Genesis II BBQ (Includes pizza stone)</h3>
+          <p class="price">£350</p>
+        </div>
+      </li>
+      <li class="item">
+        <button class="shot" data-full="images/item-36.jpg" data-name="Rug" aria-label="Enlarge photo of Rug">
+          <img src="images/item-36.jpg" alt="Rug" loading="lazy" decoding="async">
+        </button>
+        <div class="meta">
+          <span class="ref">Ref 36</span>
+          <h3>Rug</h3>
+          <p class="price free">Free</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <footer>Generated from <em>34 AcrisFurniture.xlsx</em>. Prices in GBP. Click any photo to enlarge.</footer>
+</div>
+
+<dialog id="lb"><div class="lb"><img alt=""><p></p></div></dialog>
+<script>
+  const dlg = document.getElementById('lb');
+  const img = dlg.querySelector('img'), cap = dlg.querySelector('p');
+  document.querySelectorAll('.shot').forEach(b => b.addEventListener('click', () => {
+    img.src = b.dataset.full; img.alt = b.dataset.name; cap.textContent = b.dataset.name;
+    dlg.showModal();
+  }));
+  dlg.addEventListener('click', () => dlg.close());
+  dlg.addEventListener('close', () => { img.src = ''; });
+</script>
+</body>
+</html>
